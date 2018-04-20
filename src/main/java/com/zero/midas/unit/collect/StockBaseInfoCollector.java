@@ -3,8 +3,10 @@ package com.zero.midas.unit.collect;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jsoup.Jsoup;
@@ -36,7 +38,15 @@ public class StockBaseInfoCollector {
 		List<Stock> stocks = stockBaseInfoCollector.exec();
 		StockStorage stockStorage = new StockStorage();
 		for (Stock stock : stocks) {
+			String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
+			if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
+					 || numberCode.startsWith("20") || numberCode.startsWith("30")){
+				
+			} else {
+				continue;
+			}
 			stockBaseInfoCollector.modifyIndustry(stock);
+			stockBaseInfoCollector.modifyBusiness(stock);
 			stockStorage.saveOrUpdate(stock);
 		}
 //		new StockStorage().saveOrUpdate(stocks);
@@ -101,7 +111,55 @@ public class StockBaseInfoCollector {
 			stock.setIndustry(industry);
 		} catch (Exception e) {
 			LOG.error("", e);
+		}
+	}
+	
+	private void modifyBusiness(Stock stock){
+		String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
+		if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
+				 || numberCode.startsWith("30")){
+			
+		} else {
 			return ;
+		}
+		String url = "http://stockpage.10jqka.com.cn/" + numberCode + "/";
+		String html = null;
+		try {
+			html = HttpUtils.getText(url,"UTF-8");
+			Document doc = Jsoup.parse(html);
+			if(doc.select(".company_details").isEmpty()){
+				return ;
+			}
+			Element companyDetails = doc.select(".company_details").get(0);
+			Map<String, String> map = new HashMap<String, String>();
+			Elements dts = companyDetails.select("dt");
+			Elements dds = companyDetails.select("dd");
+			List<String> keys = new LinkedList<String>();
+			List<String> values = new LinkedList<String>();
+			for (int i = 0; i < dts.size(); i++) {
+				String key = dts.get(i).ownText();
+				keys.add(key);
+			}
+			for (int i = 0; i < dds.size(); i++) {
+				String value = dds.get(i).ownText();
+				if(i == 3){
+					value = dds.get(i).attr("title").trim();
+				}
+				values.add(value);
+			}
+			values.remove(2);
+			for (int i = 0; i < keys.size(); i++) {
+				map.put(keys.get(i).replace("：", ""), values.get(i));
+			}
+			String listDate = map.get("上市日期");
+			String location = map.get("所属地域");
+			String business = map.get("主营业务").trim().replace("　　", "");
+			
+			stock.setLocation(location);
+			stock.setListDate(listDate);
+			stock.setBusiness(business);
+		} catch (Exception e) {
+			LOG.error("", e);
 		}
 	}
 }

@@ -3,7 +3,7 @@ package com.zero.midas.utils;
 public class StockCodeUtils {
 
 	public static String anaylzSHPlate(String numberCode){
-		String plate = "";
+		String plate = null;
 		if(numberCode.startsWith("001")){
 			plate = "国债现货";
 		} else if(numberCode.startsWith("110") || numberCode.startsWith("120")){
@@ -42,7 +42,7 @@ public class StockCodeUtils {
 	
 	
 	public static String anaylzSZType(String numberCode){
-		String plate = "";
+		String plate = null;
 		if(numberCode.startsWith("00")){
 			plate = "深证A股";
 		} else if(numberCode.startsWith("03")){

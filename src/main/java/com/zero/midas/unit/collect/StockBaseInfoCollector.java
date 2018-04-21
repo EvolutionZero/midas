@@ -1,22 +1,18 @@
 package com.zero.midas.unit.collect;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zero.midas.Initialization;
 import com.zero.midas.bean.pojo.Stock;
 import com.zero.midas.unit.storage.StockStorage;
 import com.zero.midas.utils.HttpUtils;
@@ -27,17 +23,19 @@ public class StockBaseInfoCollector {
 	private static final Logger LOG = LoggerFactory.getLogger(StockBaseInfoCollector.class);
 	
 	public static void main(String[] args) {
-		try {
-			InputStream is = new FileInputStream(new File(System.getProperty("user.dir") + "/conf/proxool.properties"));
-			Properties properties = new Properties();
-			properties.load(is);
-			PropertyConfigurator.configure(properties);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Initialization.exec();
 		StockBaseInfoCollector stockBaseInfoCollector = new StockBaseInfoCollector();
 		List<Stock> stocks = stockBaseInfoCollector.exec();
 		StockStorage stockStorage = new StockStorage();
+		stockStorage.saveOrUpdate(stocks);
+		
+//		List<Stock> tradableStock = stockStorage.queryTradableStock();
+//		for (Stock stock : tradableStock) {
+//			stockBaseInfoCollector.modifyIndustry(stock);
+//			stockBaseInfoCollector.modifyBusiness(stock);
+//			stockStorage.saveOrUpdate(stock);
+//		}
+//		
 //		for (Stock stock : stocks) {
 //			String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
 //			if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
@@ -50,7 +48,6 @@ public class StockBaseInfoCollector {
 //			stockBaseInfoCollector.modifyBusiness(stock);
 //			stockStorage.saveOrUpdate(stock);
 //		}
-		new StockStorage().saveOrUpdate(stocks);
 	}
 	
 	public List<Stock> exec(){
@@ -87,14 +84,6 @@ public class StockBaseInfoCollector {
 	}
 	
 	private void modifyIndustry(Stock stock){
-		System.out.println(stock.getCode());
-		String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
-		if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
-				 || numberCode.startsWith("20") || numberCode.startsWith("30")){
-			
-		} else {
-			return ;
-		}
 		String url = "http://finance.ifeng.com/app/hq/stock/" + stock.getCode();
 		String html = HttpUtils.getText(url,"UTF-8");
 		Document doc = Jsoup.parse(html);
@@ -117,12 +106,6 @@ public class StockBaseInfoCollector {
 	
 	private void modifyBusiness(Stock stock){
 		String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
-		if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
-				 || numberCode.startsWith("30")){
-			
-		} else {
-			return ;
-		}
 		String url = "http://stockpage.10jqka.com.cn/" + numberCode + "/";
 		String html = null;
 		try {

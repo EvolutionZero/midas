@@ -1,6 +1,7 @@
 package com.zero.midas.app;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -65,6 +66,7 @@ public class IntelligenceCollect {
 								stock.setListDate(company.getListDate() == null || "".equals(company.getListDate())  ? null : new Date(new SimpleDateFormat("yyyy-MM-dd").parse(company.getListDate()).getTime()));
 								stock.setLocation(company.getLocation());
 								stock.setConcept(company.getConcept());
+								stock.setUpdateTime(new Timestamp(new java.util.Date().getTime()));
 								
 								stockStorage.saveOrUpdate(stock);
 								break;

@@ -140,7 +140,7 @@ public class StockBaseInfoCollector {
 			String business = map.get("主营业务").trim().replace("　　", "");
 			
 			stock.setLocation(location);
-			stock.setListDate(listDate);
+//			stock.setListDate(listDate);
 			stock.setBusiness(business);
 		} catch (Exception e) {
 			LOG.error("", e);

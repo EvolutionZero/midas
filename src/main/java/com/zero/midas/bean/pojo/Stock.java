@@ -1,5 +1,6 @@
 package com.zero.midas.bean.pojo;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -52,13 +53,18 @@ public class Stock extends PojoBaseBean{
 	
 	@Getter
 	@Setter
+	@Column(name="concept")
+	private String concept;
+	
+	@Getter
+	@Setter
 	@Column(name="location")
 	private String location;
 	
 	@Getter
 	@Setter
 	@Column(name="listDate")
-	private String listDate;
+	private Date listDate;
 	
 	@Getter
 	@Setter

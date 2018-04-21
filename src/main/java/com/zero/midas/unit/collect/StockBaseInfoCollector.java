@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.zero.midas.bean.pojo.Stock;
 import com.zero.midas.unit.storage.StockStorage;
 import com.zero.midas.utils.HttpUtils;
+import com.zero.midas.utils.StockCodeUtils;
 
 public class StockBaseInfoCollector {
 
@@ -37,19 +38,19 @@ public class StockBaseInfoCollector {
 		StockBaseInfoCollector stockBaseInfoCollector = new StockBaseInfoCollector();
 		List<Stock> stocks = stockBaseInfoCollector.exec();
 		StockStorage stockStorage = new StockStorage();
-		for (Stock stock : stocks) {
-			String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
-			if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
-					 || numberCode.startsWith("20") || numberCode.startsWith("30")){
-				
-			} else {
-				continue;
-			}
-			stockBaseInfoCollector.modifyIndustry(stock);
-			stockBaseInfoCollector.modifyBusiness(stock);
-			stockStorage.saveOrUpdate(stock);
-		}
-//		new StockStorage().saveOrUpdate(stocks);
+//		for (Stock stock : stocks) {
+//			String numberCode = stock.getCode().replace("sh", "").replace("sz", "");
+//			if(numberCode.startsWith("60") || numberCode.startsWith("90") || numberCode.startsWith("00")
+//					 || numberCode.startsWith("20") || numberCode.startsWith("30")){
+//				
+//			} else {
+//				continue;
+//			}
+//			stockBaseInfoCollector.modifyIndustry(stock);
+//			stockBaseInfoCollector.modifyBusiness(stock);
+//			stockStorage.saveOrUpdate(stock);
+//		}
+		new StockStorage().saveOrUpdate(stocks);
 	}
 	
 	public List<Stock> exec(){
@@ -70,14 +71,14 @@ public class StockBaseInfoCollector {
 				
 				String numberCode = record.substring(idx + 1, record.length() - 1);
 				String code = (i == 0 ? "sh" : "sz") + numberCode;
-				String plate = i == 0 ? "上证" : "深证";
-				
-				
+				String exchange = i == 0 ? "上海证券交易所" : "深圳证券交易所";
+				String type = i == 0 ? StockCodeUtils.anaylzSHPlate(numberCode) : StockCodeUtils.anaylzSZType(numberCode);
 				
 				Stock stock = new Stock();
 				stock.setCode(code);
 				stock.setName(name);
-				stock.setPlate(plate);
+				stock.setExchange(exchange);
+				stock.setType(type);
 				
 				stocks.add(stock);
 			}

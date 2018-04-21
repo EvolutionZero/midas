@@ -37,8 +37,13 @@ public class Stock extends PojoBaseBean{
 	
 	@Getter
 	@Setter
-	@Column(name="plate")
-	private String plate;
+	@Column(name="exchange")
+	private String exchange;
+	
+	@Getter
+	@Setter
+	@Column(name="type")
+	private String type;
 	
 	@Getter
 	@Setter

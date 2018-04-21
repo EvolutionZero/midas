@@ -30,12 +30,11 @@ public class StockDailyDataTask {
 		int threadSize = 4;
 		ExecutorService mainThreadPool = Executors.newFixedThreadPool(threadSize);
 		for (Stock stock : tradableStock) {
-			LOG.info("收集{}数据！", stock.getCode());
 			mainThreadPool.execute(new Runnable() {
-				
 				@SuppressWarnings("unchecked")
 				@Override
 				public void run() {
+					LOG.info("收集{}数据！", stock.getCode());
 					List<Daily> result = new LinkedList<>();
 					try {
 						String url = "http://api.finance.ifeng.com/akdaily/?code="+ stock.getCode() + "&type=last" ;
@@ -45,7 +44,7 @@ public class StockDailyDataTask {
 							ObjectMapper mapper = new ObjectMapper();
 							map = mapper.readValue(json, LinkedHashMap.class);
 						} catch (Exception e) {
-							e.printStackTrace();
+							LOG.error("", e);
 						}
 						Object record = map.get("record");
 						if(record == null || "{}".equals(record.toString())){

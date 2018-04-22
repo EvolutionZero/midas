@@ -90,6 +90,11 @@ public class Daily extends PojoBaseBean{
 	
 	@Getter
 	@Setter
+	@Column(name="ma30")
+	private Double ma30;
+	
+	@Getter
+	@Setter
 	@Column(name="vma5")
 	private Double vma5;
 	
@@ -107,6 +112,32 @@ public class Daily extends PojoBaseBean{
 	@Setter
 	@Column(name="turnover")
 	private Double turnover;
+	
+	
+	@Getter
+	@Setter
+	@Column(name="upper")
+	private Double upper;
+	
+	@Getter
+	@Setter
+	@Column(name="middle")
+	private Double middle;
+	
+	@Getter
+	@Setter
+	@Column(name="lower")
+	private Double lower;
+	
+	@Getter
+	@Setter
+	@Column(name="percentB")
+	private Double percentB;
+	
+	@Getter
+	@Setter
+	@Column(name="updateTime" , columnDefinition="timestamp default CURRENT_TIMESTAMP")
+	private Timestamp updateTime;
 	
 	@Getter
 	@Setter

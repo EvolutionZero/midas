@@ -16,10 +16,12 @@ public class SearchEngine {
 		List<Stock> tradableStock = stockStorage.queryTradableStock();
 		String keyword = "人工智能 体育";
 		for (Stock stock : tradableStock) {
+			String industry = stock.getIndustry() == null ? "" : stock.getIndustry();
+			String location = stock.getLocation() == null ? "" : stock.getLocation();
 			String business = stock.getBusiness() == null ? "" : stock.getBusiness();
 			String concept = stock.getConcept() == null ? "" : stock.getConcept();
 			StringBuilder sb = new StringBuilder();
-			sb.append(business).append(";").append(concept);
+			sb.append(industry).append(";").append(location).append(";").append(business).append(";").append(concept);
 			if(isContainKeyword(sb.toString(), keyword)){
 				System.out.println(stock);
 			}
@@ -27,12 +29,17 @@ public class SearchEngine {
 	}
 	
 	public static boolean isContainKeyword(String text, String keyword){
+		boolean contain = false;
+		if(text == null || keyword == null){
+			return contain;
+		}
 		String[] array = keyword.trim().split(" ");
 		Set<String> keywords = new HashSet<>();
 		for (String temp : array) {
-			keywords.add(temp);
+			if(!"".equals(temp.trim())){
+				keywords.add(temp);
+			}
 		}
-		boolean contain = false;
 		int expect = keywords.size();
 		if(expect == 0){
 			return contain;

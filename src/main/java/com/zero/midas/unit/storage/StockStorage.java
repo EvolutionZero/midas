@@ -30,8 +30,9 @@ public class StockStorage extends FinanceBaseStorage<Stock>{
 		if(keywords == null || keywords.isEmpty()){
 			return new LinkedList<Stock>();
 		}
-		StringBuilder sql = new StringBuilder(query).append(" WHERE ( type like '%A股%' OR  type like '%B股%' OR  type like '%创业板%' ) AND ");
 		List<Object> paramList = new LinkedList<Object>();
+		
+		StringBuilder sql = new StringBuilder(query).append(" WHERE ( type like '%A股%' OR  type like '%B股%' OR  type like '%创业板%' ) AND ");
 		for (String keyword : keywords) {
 			sql.append(" ( industry like CONCAT('%', ?, '%') OR");
 			sql.append(" concept like CONCAT('%', ?, '%') OR");

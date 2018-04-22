@@ -1,7 +1,6 @@
 package com.zero.midas.unit.storage;
 
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +23,7 @@ public class DailyStorage extends FinanceBaseStorage<Daily>{
 	}
 	
 	public List<Daily> queryByCode(String code){
-		String sql = query + " where code = ? order by date";
-		List<String> keywords = Arrays.asList(new String[]{"code", "name" , "close", "open", "change"});
-		for (String keyword : keywords) {
-			if(sql.contains(keyword)){
-				sql = sql.replace("," + keyword + ",", ",`" + keyword + "`,")
-						.replace("(" + keyword + ",", "(`" + keyword + "`,");
-			}
-		}
+		String sql = query + " where `code` = ? order by date";
 		return query(sql, new Object[]{code});
 	}
 }

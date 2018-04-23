@@ -41,7 +41,6 @@ public class IntelligenceCollect {
 		List<Stock> tradableStock = stockStorage.queryTradableStock();
 		int threadSize = 4;
 		ExecutorService mainThreadPool = Executors.newFixedThreadPool(threadSize);
-//		ExecutorService subThreadPool = Executors.newFixedThreadPool( 2 * threadSize);
 		LOG.info("开始采集情报");
 		for (Stock stock : tradableStock) {
 			mainThreadPool.execute(new Runnable() {
@@ -51,30 +50,28 @@ public class IntelligenceCollect {
 					FutureTask<String> industryFuture = new FutureTask<String>(new StockIndustryCollector(stock.getCode()));
 					FutureTask<Company> companyFuture = new FutureTask<Company>(new StockCompanyCollector(stock.getCode()));
 					
-//					Future<String> industryFuture = (Future<String>) subThreadPool.submit(new FutureTask<String>(new StockIndustryCollector(stock.getCode())));
-//					Future<Company> companyFuture = (Future<Company>) subThreadPool.submit(new FutureTask<Company>(new StockCompanyCollector(stock.getCode())));
-					new Thread(industryFuture).start();
-					new Thread(companyFuture).start();
+					Thread industryThread = new Thread(industryFuture);
+					Thread companyThread = new Thread(companyFuture);
+					
+					industryThread.start();
+					companyThread.start();
+
 					try {
-						while(true){
-							if(industryFuture.isDone() && companyFuture.isDone()){
-								String industry = industryFuture.get();
-								Company company = companyFuture.get();
-								stock.setIndustry(industry);
-								stock.setBusiness(company.getBusiness());
-								stock.setLocation(company.getLocation());
-								stock.setListDate(company.getListDate() == null || "".equals(company.getListDate())  ? null : new Date(new SimpleDateFormat("yyyy-MM-dd").parse(company.getListDate()).getTime()));
-								stock.setLocation(company.getLocation());
-								stock.setConcept(company.getConcept());
-								stock.setUpdateTime(new Timestamp(new java.util.Date().getTime()));
-								
-								stockStorage.saveOrUpdate(stock);
-								break;
-							} else {
-								Thread.sleep(100);
-							}
-							
-						}
+						industryThread.join();
+						companyThread.join();
+						
+						String industry = industryFuture.get();
+						Company company = companyFuture.get();
+						
+						stock.setIndustry(industry);
+						stock.setBusiness(company.getBusiness());
+						stock.setLocation(company.getLocation());
+						stock.setListDate(company.getListDate() == null || "".equals(company.getListDate())  ? null : new Date(new SimpleDateFormat("yyyy-MM-dd").parse(company.getListDate()).getTime()));
+						stock.setLocation(company.getLocation());
+						stock.setConcept(company.getConcept());
+						stock.setUpdateTime(new Timestamp(new java.util.Date().getTime()));
+						
+						stockStorage.saveOrUpdate(stock);
 					} catch (InterruptedException e) {
 						LOG.error("", e);
 					} catch (ExecutionException e) {
@@ -92,5 +89,3 @@ public class IntelligenceCollect {
 	}
 	
 }
-
-

@@ -28,7 +28,7 @@ public class TestSearchEngine {
 //		long end = System.currentTimeMillis();
 //		System.out.println("平均耗时:" + ((end - start) / testCnt) + " ms.");
 		 
-		List<Stock> stocks = new StockStorage().queryByKeywords("人工智能    芯片");
+		List<Stock> stocks = new StockStorage().queryByKeywords("雄安 人工智能");
 		for (Stock stock : stocks) {
 			System.out.println(stock);
 		}

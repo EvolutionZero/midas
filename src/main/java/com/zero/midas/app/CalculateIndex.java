@@ -11,7 +11,9 @@ import com.zero.midas.bean.pojo.Stock;
 import com.zero.midas.unit.storage.DailyStorage;
 import com.zero.midas.unit.storage.StockStorage;
 import com.zero.midas.utils.BollUtils;
+import com.zero.midas.utils.DailyUtils;
 import com.zero.midas.utils.MAUtils;
+import com.zero.midas.utils.WRUtils;
 
 public class CalculateIndex {
 
@@ -20,15 +22,16 @@ public class CalculateIndex {
 		DailyStorage dailyStorage = new DailyStorage();
 		List<Stock> tradableStock = stockStorage.queryTradableStock();
 		for (Stock stock : tradableStock) {
-			List<Daily> totalDailyDatas = dailyStorage.queryByCode(stock.getCode());
+			List<Daily> line = dailyStorage.queryByCode(stock.getCode());
 			List<Daily> needCalcuteDaily = new LinkedList<>();
-			for (Daily daily : totalDailyDatas) {
+			for (Daily daily : line) {
 				if(daily.getMa30() == null){
 					needCalcuteDaily.add(daily);
 				}
 			}
-			calcuteMa30(totalDailyDatas, needCalcuteDaily);
-			calcuteBoll(totalDailyDatas, needCalcuteDaily);
+			calcuteMa30(line, needCalcuteDaily);
+			calcuteBoll(line, needCalcuteDaily);
+			calcuteWRx(line, needCalcuteDaily);
 			for (Daily daily : needCalcuteDaily) {
 				daily.setUpdateTime(new Timestamp(new Date().getTime()));
 			}
@@ -36,55 +39,28 @@ public class CalculateIndex {
 		}
 	}
 	
-	private void calcuteMa30(List<Daily> totalDailyDatas, List<Daily> needCalcuteDaily){
-		for (Daily daily : needCalcuteDaily) {
-			int endIndex = findEndIndex(totalDailyDatas, daily);
-			if(endIndex < 30 || totalDailyDatas.size() < 30){
-				daily.setMa30(0.0);
-			} else {
-				List<Daily> calcuteMa30Line = getLine(totalDailyDatas, endIndex, 30);
-				double ma30 = MAUtils.getMAx(calcuteMa30Line, 30);
-				daily.setMa30(ma30);
-			}
+	private void calcuteMa30(List<Daily> line, List<Daily> needCalcuteDaily){
+		for (Daily point : needCalcuteDaily) {
+			point.setMa30(MAUtils.getMAx(DailyUtils.subLineBeforePoint(line, point, 30), 30));
 		}
 	}
 	
-	private void calcuteBoll(List<Daily> totalDailyDatas, List<Daily> needCalcuteDaily){
-		for (Daily daily : needCalcuteDaily) {
-			int endIndex = findEndIndex(totalDailyDatas, daily);
-			if(endIndex < 20 || totalDailyDatas.size() < 20){
-				daily.setUpper(0.0);
-				daily.setLower(0.0);
-				daily.setMiddle(0.0);
-				daily.setPercentB(0.0);
-			} else {
-				List<Daily> calcuteBollLine = getLine(totalDailyDatas, endIndex, 20);
-				Boll boll = BollUtils.getBoll(calcuteBollLine);
-				daily.setUpper(boll.getUpper());
-				daily.setLower(boll.getLower());
-				daily.setMiddle(boll.getMiddle());
-				daily.setPercentB(boll.getPercentB());
-			}
+	private void calcuteBoll(List<Daily> line, List<Daily> needCalcuteDaily){
+		for (Daily point : needCalcuteDaily) {
+			Boll boll = BollUtils.getBoll(DailyUtils.subLineBeforePoint(line, point, 20));
+			point.setUpper(boll.getUpper());
+			point.setLower(boll.getLower());
+			point.setMiddle(boll.getMiddle());
+			point.setPercentB(boll.getPercentB());
 		}
 	}
 	
-	private int findEndIndex(List<Daily> dailyDatas, Daily needCalcute){
-		int idx = 0;
-		for (int i = 0; i < dailyDatas.size(); i++) {
-			Daily daily = dailyDatas.get(i);
-			if(daily.getDate() != null && daily.getDate().equals(needCalcute.getDate())){
-				idx = i;
-				break;
-			}
+	private void calcuteWRx(List<Daily> line, List<Daily> needCalcuteDaily){
+		for (Daily point : needCalcuteDaily) {
+			point.setWr5(WRUtils.getWRx(DailyUtils.subLineBeforePoint(line, point, 5), 5));
+			point.setWr10(WRUtils.getWRx(DailyUtils.subLineBeforePoint(line, point, 10), 10));
+			point.setWr20(WRUtils.getWRx(DailyUtils.subLineBeforePoint(line, point, 20), 20));
+			point.setWr30(WRUtils.getWRx(DailyUtils.subLineBeforePoint(line, point, 30), 30));
 		}
-		return idx;
-	}
-	
-	private List<Daily> getLine(List<Daily> dailyDatas, int endIndex, int cnt){
-		List<Daily> line = new LinkedList<>();
-		for (int i = (endIndex + 1 - cnt); i < (endIndex + 1); i++) {
-			line.add(dailyDatas.get(i));
-		}
-		return line;
 	}
 }

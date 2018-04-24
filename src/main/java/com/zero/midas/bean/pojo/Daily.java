@@ -136,6 +136,26 @@ public class Daily extends PojoBaseBean{
 	
 	@Getter
 	@Setter
+	@Column(name="wr5")
+	private Double wr5;
+	
+	@Getter
+	@Setter
+	@Column(name="wr10")
+	private Double wr10;
+	
+	@Getter
+	@Setter
+	@Column(name="wr20")
+	private Double wr20;
+	
+	@Getter
+	@Setter
+	@Column(name="wr30")
+	private Double wr30;
+	
+	@Getter
+	@Setter
 	@Column(name="updateTime" , columnDefinition="timestamp default CURRENT_TIMESTAMP")
 	private Timestamp updateTime;
 	

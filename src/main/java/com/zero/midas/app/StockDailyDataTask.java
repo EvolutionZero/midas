@@ -30,6 +30,11 @@ public class StockDailyDataTask {
 		int threadSize = 4;
 		ExecutorService mainThreadPool = Executors.newFixedThreadPool(threadSize);
 		for (Stock stock : tradableStock) {
+			Date date = codeLastDateMap.get(stock.getCode());
+			if(date != null && date.toString().equals(new Date(new java.util.Date().getTime()).toString())){
+				LOG.info("{}已有最新数据！", stock.getCode());
+				continue;
+			}
 			mainThreadPool.execute(new Runnable() {
 				@SuppressWarnings("unchecked")
 				@Override

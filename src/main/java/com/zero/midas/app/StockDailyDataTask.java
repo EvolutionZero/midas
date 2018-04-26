@@ -25,7 +25,7 @@ public class StockDailyDataTask {
 	public void exec(){
 		StockStorage stockStorage = new StockStorage();
 		DailyStorage dailyStorage = new DailyStorage();
-		List<Stock> tradableStock = stockStorage.queryTradableStock();
+		List<Stock> tradableStock = stockStorage.queryCollectInfoStock();
 		Map<String, Date> codeLastDateMap = dailyStorage.queryCodeLastDate();
 		int threadSize = 4;
 		ExecutorService mainThreadPool = Executors.newFixedThreadPool(threadSize);

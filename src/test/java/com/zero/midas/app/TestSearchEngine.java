@@ -21,17 +21,22 @@ public class TestSearchEngine {
 	public void testDbSearch(){
 //		long start = System.currentTimeMillis();
 //		int testCnt = 1000;
-//		StockStorage stockStorage = new StockStorage();
+		StockStorage stockStorage = new StockStorage();
 //		for (int i = 0; i < testCnt; i++) {
 //			stockStorage.queryByKeywords("人工智能  广州");
 //		}
 //		long end = System.currentTimeMillis();
 //		System.out.println("平均耗时:" + ((end - start) / testCnt) + " ms.");
 		 
-		List<Stock> stocks = new StockStorage().queryByKeywords("雄安 人工智能");
+		
+		List<Stock> stocks = stockStorage.queryByKeywords("雄安 人工智能");
 		for (Stock stock : stocks) {
 			System.out.println(stock);
 		}
+		List<Stock> tradableStock = stockStorage.queryTradableStock();
+		
+		System.out.println(stockStorage.queryAbnormalTradeStatusStock().size());
+//		System.out.println(tradableStock);
 	}
 	
 	@Test

@@ -38,11 +38,11 @@ public class IntelligenceCollect {
 		List<Stock> stockBaseInfo = stockBaseInfoCollector.exec();
 		stockStorage.saveOrUpdate(stockBaseInfo);
 		
-		List<Stock> tradableStock = stockStorage.queryTradableStock();
+		List<Stock> collectInfoStock = stockStorage.queryCollectInfoStock();
 		int threadSize = 4;
 		ExecutorService mainThreadPool = Executors.newFixedThreadPool(threadSize);
 		LOG.info("开始采集情报");
-		for (Stock stock : tradableStock) {
+		for (Stock stock : collectInfoStock) {
 			mainThreadPool.execute(new Runnable() {
 				@Override
 				public void run() {

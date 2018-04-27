@@ -112,4 +112,5 @@ public class StockStorage extends FinanceBaseStorage<Stock>{
 		String sql = "UPDATE T_STOCK SET STATUS = ? WHERE `CODE` = ?";
 		return update(sql, new Object[]{status, code});
 	}
+	
 }

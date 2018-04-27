@@ -1,5 +1,6 @@
 package com.zero.midas.app;
 
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,15 +32,29 @@ public class FindExtreme {
 			List<Extreme> midExtremes = findExtremes(shortExtremes, ExtremeLevel.MIDDLE);
 			List<Extreme> longExtremes = findExtremes(midExtremes, ExtremeLevel.LONG);
 			
-			List<Extreme> totalExtreme = new LinkedList<>();
-			totalExtreme.addAll(shortExtremes);
-			totalExtreme.addAll(midExtremes);
-			totalExtreme.addAll(longExtremes);
+			List<Extreme> saveExtreme = new LinkedList<>();
+			saveExtreme.addAll(filte(shortExtremes, extremeStorage.queryLastDate(stock.getCode(), ExtremeLevel.SHORT)));
+			saveExtreme.addAll(filte(midExtremes, extremeStorage.queryLastDate(stock.getCode(), ExtremeLevel.MIDDLE)));
+			saveExtreme.addAll(filte(longExtremes, extremeStorage.queryLastDate(stock.getCode(), ExtremeLevel.LONG)));
 			
-			extremeStorage.saveUnique(totalExtreme);
+			extremeStorage.saveUnique(saveExtreme);
 		}
 	}
 
+	private List<Extreme> filte(List<Extreme> line, Date date){
+		if(date == null){
+			return line;
+		}
+		List<Extreme> result = new LinkedList<>();
+		for (Extreme extreme : line) {
+			if(extreme.getDate() != null && extreme.getDate().after(date)){
+				result.add(extreme);
+			}
+		}
+		return result;
+	}
+	
+	
 //	private static void findHistoryExtreme() {
 //		findAreaExtreme(Integer.MAX_VALUE);
 //	}

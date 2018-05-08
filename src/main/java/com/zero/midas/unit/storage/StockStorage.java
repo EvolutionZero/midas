@@ -113,4 +113,9 @@ public class StockStorage extends FinanceBaseStorage<Stock>{
 		return update(sql, new Object[]{status, code});
 	}
 	
+	
+	public List<Stock> queryAllConcept(){
+		String sql = query + " WHERE CONCEPT IS NOT NULL";
+		return query(sql);
+	}
 }

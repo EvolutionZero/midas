@@ -2,6 +2,7 @@ package com.zero.midas.bean.pojo;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -17,6 +18,13 @@ import lombok.ToString;
 @Table(name="T_EXTREME")
 public class Extreme extends PojoBaseBean{
 
+	public Extreme() {
+	}
+	
+	public Extreme(Map<String, Object> resultSet) {
+		super(resultSet);
+	}
+	
 	@Getter
 	@Setter
 	@Id

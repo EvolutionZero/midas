@@ -1,12 +1,36 @@
 package com.zero.midas.utils;
 
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.zero.midas.bean.pojo.Daily;
+import com.zero.midas.bean.pojo.Extreme;
 
 public class DailyUtils {
 
+	public static List<Daily> subLine(List<Daily> line, int start){
+		List<Daily> result = new LinkedList<>();
+		if(start > 0 && start < line.size()){
+			for (int i = start; i < line.size(); i++) {
+				result.add(line.get(i));
+			}
+		}
+		return result;
+	}
+	
+	public static List<Daily> subLineBeforePoint(List<Daily> line, Date end){
+		List<Daily> result = new LinkedList<>();
+		for (int i = 0; i < line.size(); i++) {
+			Daily extreme = line.get(i);
+			if(extreme.getDate() != null && extreme.getDate().before(end)){
+				result.add(line.get(i));
+			}
+		}
+		return result;
+	}
+	
+	
 	public static List<Daily> subLineBeforePoint(List<Daily> line, Daily point, int cnt){
 		List<Daily> result = new LinkedList<>();
 		int endIndex = findEndIndex(line, point);

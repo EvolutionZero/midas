@@ -19,4 +19,9 @@ public class ExtremeStorage extends FinanceBaseStorage<Extreme>{
 		}
 		return result;
 	}
+	
+	public List<Extreme> query(String code, ExtremeLevel level){
+		String sql = query + " where `code` = ? and `level` = ?";
+		return query(sql, new Object[]{code, level.getName()});
+	}
 }

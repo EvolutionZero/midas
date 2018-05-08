@@ -46,4 +46,26 @@ public class MathUtils {
 		}
 		return min;
 	}
+	
+	/**
+	 * 是否顶部
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	public static boolean isTop(double x, double y, double z){
+		return y > x && y > z;
+	}
+	
+	/**
+	 * 是否底部
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	public static boolean isButtom(double x, double y, double z){
+		return y < x && y < z;
+	}
 }

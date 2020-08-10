@@ -24,6 +24,7 @@ public class IFengCollectorMonthlyListener
     private ApplicationEventPublisher publisher;
 
     @Async
+    @Override
     public void onApplicationEvent(IFengCollectorMonthlyEvent event) {
         try {
             log.info("接收采集[{}]月线事件,剩余[{}]张允许证", event.getCode(), Integer.valueOf(event.getThreshold().availablePermits()));

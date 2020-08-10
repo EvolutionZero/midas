@@ -39,8 +39,10 @@ public class IFengCollectorFactory {
             tradeDTO.setVma5(getBigDecimal(data, 11));
             tradeDTO.setVma10(getBigDecimal(data, 12));
             tradeDTO.setVma20(getBigDecimal(data, 13));
-            if (data.size() > 14)
+            if (data.size() > 14) {
                 tradeDTO.setTurnover(getBigDecimal(data, 14));
+
+            }
             return tradeDTO;
         } catch (Exception e) {
             throw new MidasException(String.format("[%s]转换数据错误", code), e);

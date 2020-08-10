@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: 'jdbc:mysql://127.0.0.1:3306/midas?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true'
+    username: root
+    password: root
+    # Hikari 连接池配置
+    hikari:
+    # 最小空闲连接数量
+      minimum-idle: 5
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 10
+      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 600000
+      # 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 250
+      connection-test-query: SELECT 1
+      validation-timeout: 250
+#    druid:
+#      #初始化大小
+#      initialSize: 5
+#      #最小值
+#      minIdle: 5
+#      #最大值
+#      maxActive: 20
+#      web-stat-filter:
+#        enabled: true
+#      stat-view-servlet:
+#        enabled: true
+#        login-username: root
+#        login-password: root
+#      max-wait: 800
+#      keep-alive: true
+#      validation-query: SELECT 1
+#      validation-query-timeout: 10
+midas:
+  # 采集数据并发度
+  threshold: 10

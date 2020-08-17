@@ -1,7 +1,6 @@
 package com.zero.midas.domain.entity.kline;
 
 
-import com.zero.midas.domain.model.dto.KLineDTO;
 import com.zero.midas.domain.strategy.Pattern;
 import com.zero.midas.domain.strategy.impl.Venus;
 
@@ -13,9 +12,9 @@ public class KLine {
 
     private Map<String, Pattern> patterns;
 
-    private List<KLineDTO> klines;
+    private List<KLineNode> klines;
 
-    public KLine(Map<String, Pattern> patterns, List<KLineDTO> klines) {
+    public KLine(Map<String, Pattern> patterns, List<KLineNode> klines) {
         this.patterns = patterns;
         this.klines = klines;
     }

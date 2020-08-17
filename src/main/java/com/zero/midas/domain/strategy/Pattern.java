@@ -1,6 +1,6 @@
 package com.zero.midas.domain.strategy;
 
-import com.zero.midas.domain.model.dto.KLineDTO;
+import com.zero.midas.domain.entity.kline.KLineNode;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface Pattern {
 
-    boolean judge(List<KLineDTO> kLines);
+    boolean judge(List<KLineNode> kLines);
 }

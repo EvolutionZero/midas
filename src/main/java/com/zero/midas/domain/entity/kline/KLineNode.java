@@ -5,6 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static com.zero.midas.utils.BigDecimalUtils.eq;
 /**
  * @author: fengzijian
  * @since: 2020/8/17 14:17
@@ -34,11 +35,11 @@ public class KLineNode {
     }
 
     public BigDecimal upShadowRatio() {
-        return high.equals(open) ? new BigDecimal("0") : high.subtract(open).abs().divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
+        return high.equals(open) || eq(high, low) ? new BigDecimal("0") : high.subtract(open).abs().divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal downShadowRatio() {
-        return low.equals(close) ? new BigDecimal("0") : close.subtract(low).abs().divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
+        return low.equals(close) || eq(high, low) ? new BigDecimal("0") : close.subtract(low).abs().divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
     }
 
 }

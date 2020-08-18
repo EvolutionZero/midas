@@ -1,15 +1,16 @@
-package com.zero.midas.domain.strategy.impl;
+package com.zero.midas.domain.specification.impl;
 
 
 import com.zero.midas.domain.entity.kline.KLineNode;
-import com.zero.midas.domain.strategy.Pattern;
+import com.zero.midas.domain.specification.Specification;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import static com.zero.midas.utils.BigDecimalUtils.lte;
+
 @Component
-public class Cross implements Pattern {
+public class Cross implements Specification {
 
     @Override
     public boolean judge(List<KLineNode> kLines) {
@@ -17,6 +18,6 @@ public class Cross implements Pattern {
             return false;
         }
         KLineNode kLineNode = kLines.get(kLines.size() - 1);
-        return kLineNode.entityRatio().compareTo(new BigDecimal("0.01")) < 0;
+        return lte(kLineNode.entityRatio(), 0.01);
     }
 }

@@ -1,26 +1,32 @@
 package com.zero.midas.domain.entity.kline;
 
 
-import com.zero.midas.domain.strategy.Pattern;
-import com.zero.midas.domain.strategy.impl.Venus;
+import com.zero.midas.domain.specification.Specification;
+import com.zero.midas.domain.specification.impl.Venus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class KLine {
 
-    private Map<String, Pattern> patterns;
+    @Autowired
+    private Map<String, Specification> specifications;
 
     private List<KLineNode> klines;
 
-    public KLine(Map<String, Pattern> patterns, List<KLineNode> klines) {
-        this.patterns = patterns;
+    public KLine(List<KLineNode> klines) {
         this.klines = klines;
     }
 
     public boolean isVenus() {
-        return Optional.ofNullable(patterns.get(Venus.class.getSimpleName().toLowerCase())).map(pattern -> pattern.judge(klines)).orElse(false);
+        return Optional.ofNullable(specifications.get(Venus.class.getSimpleName().toLowerCase())).map(pattern -> pattern.judge(klines)).orElse(false);
     }
 
 }

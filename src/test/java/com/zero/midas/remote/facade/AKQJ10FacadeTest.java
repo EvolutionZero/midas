@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,7 +25,11 @@ public class AKQJ10FacadeTest {
 
     @Test
     public void listFollow() {
-        Optional<String> s = akqj10Facade.listFollow(COOKIE);
-        System.out.println(s.get());
+        Optional<List<String>> follows = akqj10Facade.listFollow(COOKIE);
+        if (follows.isPresent()) {
+            List<String> codes = follows.get();
+//            codes.forEach(code -> akqj10Facade.unfollow(COOKIE, code));
+            codes.forEach(code -> akqj10Facade.follow(COOKIE, code));
+        }
     }
 }

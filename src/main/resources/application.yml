@@ -16,7 +16,7 @@ server:
     include-exception: true
 logging:
   level:
-    com.zero.midas.remote: info
+    com.zero.midas.remote: debug
     com.zero.midas.mapper: info
 mybatis:
   mapper-locations: 'classpath:mapper/*.xml'

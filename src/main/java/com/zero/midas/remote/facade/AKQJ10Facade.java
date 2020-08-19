@@ -47,15 +47,15 @@ public class AKQJ10Facade {
         }
     }
 
-//    public Optional<String> unfollow(String cookie, String code) {
-//        try {
-//            Map<String, String> headers = new HashMap<>();
-//            headers.put("Cookie", cookie);
-//            return Optional.ofNullable(delegate.unfollow(new URI("http://stockpage.10jqka.com.cn"), headers, code));
-//        } catch (URISyntaxException e) {
-//            throw new MidasException(e);
-//        }
-//    }
+    public Optional<String> unfollow(String cookie, String code) {
+        try {
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Cookie", cookie);
+            return Optional.ofNullable(delegate.unfollow(new URI("http://stockpage.10jqka.com.cn"), headers, code));
+        } catch (URISyntaxException e) {
+            throw new MidasException(e);
+        }
+    }
 
     @Data
     public static class Follow {

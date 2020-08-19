@@ -20,8 +20,8 @@ public interface AKQJ10Remote {
     @RequestLine("GET /spService/{code}/Header/selfStockAdd")
     String follow(URI url, @HeaderMap Map<String, String> headers, @Param(value = "code") String code);
 
-//    @RequestLine("GET /self.php?stockcode={code}&op=del&&jsonp=jQuery111004420407375572606_1597766123128&_=1597766123129")
-//    String unfollow(URI url, @HeaderMap Map<String, String> headers, @Param(value = "code") String code);
+    @RequestLine("GET /self.php?stockcode={code}&op=del&jsonp=jQuery111004420407375572606_1597766123128&_=1597766123129")
+    String unfollow(URI url, @HeaderMap Map<String, String> headers, @Param(value = "code") String code);
 
     class Config {
         @Autowired

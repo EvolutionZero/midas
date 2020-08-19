@@ -28,7 +28,7 @@ public class AKQJ10FacadeTest {
         Optional<List<String>> follows = akqj10Facade.listFollow(COOKIE);
         if (follows.isPresent()) {
             List<String> codes = follows.get();
-//            codes.forEach(code -> akqj10Facade.unfollow(COOKIE, code));
+            codes.forEach(code -> akqj10Facade.unfollow(COOKIE, code));
             codes.forEach(code -> akqj10Facade.follow(COOKIE, code));
         }
     }

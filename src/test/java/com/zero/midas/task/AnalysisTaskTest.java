@@ -19,7 +19,7 @@ public class AnalysisTaskTest {
     private AnalysisTask analysisTask;
 
     @Test
-    public void exec() {
-        analysisTask.exec();
+    public void analysisMonthly() {
+        analysisTask.analysisMonthly();
     }
 }

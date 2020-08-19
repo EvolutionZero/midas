@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @FeignClient(name = "AKQJ10Remote", configuration = {AKQJ10Remote.Config.class})
 public interface AKQJ10Remote {
-    @RequestLine("GET /getselfstockinfo.php?jsonp=callback&callback=callback&_=1597768495917")
+    @RequestLine("GET /getselfstockinfo.php?jsonp=callback&callback=callback")
     String listFollow(URI url, @HeaderMap Map<String, String> headers);
 
     @RequestLine("GET /spService/{code}/Header/selfStockAdd")

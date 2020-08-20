@@ -2,6 +2,7 @@ package com.zero.midas.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.mapper.MonthlyMapper;
 import com.zero.midas.model.entity.MonthlyDO;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,10 @@ public class MonthlyRepository
         LambdaQueryWrapper<MonthlyDO> conditions = new LambdaQueryWrapper<>();
         conditions.eq(MonthlyDO::getCode, code);
         return list(conditions);
+    }
+
+    public List<KLineNode> listKLine(String code) {
+        return baseMapper.listKLine(code);
     }
 
 }

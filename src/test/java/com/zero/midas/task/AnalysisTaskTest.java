@@ -22,4 +22,9 @@ public class AnalysisTaskTest {
     public void analysisMonthly() {
         analysisTask.analysisMonthly();
     }
+
+    @Test
+    public void analysisDaily() {
+        analysisTask.analysisDaily();
+    }
 }

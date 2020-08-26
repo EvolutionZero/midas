@@ -243,15 +243,15 @@
             {
                 type: 'inside',
                 xAxisIndex: [0, 1],
-                start: 98,
-                end: 100
+                start: 30, //下面进度条起始
+                end: 80 //下面进度条结束
             },
             {
                 show: true,
                 xAxisIndex: [0, 1],
                 type: 'slider',
                 top: '85%',
-                start: 98,
+                start: 50,
                 end: 100
             }
         ],
@@ -328,5 +328,15 @@
     setTimeout(1000);
     // 为echarts对象加载数据
     myChart.setOption(option);
+    myChart.dispatchAction({
+        type: 'brush',
+        areas: [
+            {
+                brushType: 'lineX',
+                coordRange: ['2004-01-02', '2004-04-16'],
+                xAxisIndex: 0
+            }
+        ]
+    });
 </script>
 </html>

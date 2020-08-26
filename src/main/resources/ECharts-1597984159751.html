@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts - Generate By @isea533/abel533</title>
+    <style>* {
+        margin: 0
+    }
+
+    html, body {
+        height: 100%
+    }
+
+    .wrapper {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        margin: 0 auto -155px
+    }
+
+    .footer, .push {
+        height: 155px
+    }
+
+    table.gridtable {
+        font-family: verdana, arial, sans-serif;
+        font-size: 11px;
+        color: #333;
+        border-width: 1px;
+        border-color: #666;
+        border-collapse: collapse;
+        margin: 5px auto
+    }
+
+    table.gridtable th {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666;
+        background-color: #dedede
+    }
+
+    table.gridtable td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666;
+        background-color: #fff
+    }
+
+    .middle {
+        text-align: center;
+        margin: 0 auto;
+        width: 90%;
+        height: auto
+    }
+
+    .info {
+        font-size: 12px;
+        text-align: center;
+        line-height: 20px;
+        padding: 40px
+    }
+
+    .info a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: green
+    }</style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="middle">
+        <h1 style="padding: 70px 0 20px;">ECharts效果</h1>
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main" style="height:400px"></div>
+    </div>
+    <div class="push"></div>
+</div>
+<div class="footer">
+    <div class="info">
+        ECharts - JAVA开发工具：
+        <a href="http://git.oschina.net/free/ECharts" target="_blank">项目地址</a>
+        <a href="http://echarts.baidu.com" target="_blank">ECharts地址</a>
+        <br/>
+        作者：<a href="http://blog.csdn.net/isea533" style="margin: 0;" target="_blank">@Isea533/abel533</a>
+    </div>
+</div>
+</body>
+<!-- ECharts单文件引入 -->
+<script src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var option = {
+        "calculable": true,
+        "title": {"text": "某地区蒸发量和降水量", "subtext": "纯属虚构"},
+        "toolbox": {
+            "feature": {
+                "mark": {
+                    "show": true,
+                    "title": {"markUndo": "删除辅助线", "markClear": "清空辅助线", "mark": "辅助线开关"},
+                    "lineStyle": {"color": "#1e90ff", "type": "dashed", "width": 2}
+                },
+                "dataView": {"show": true, "title": "数据视图", "readOnly": false, "lang": ["数据视图", "关闭", "刷新"]},
+                "magicType": {
+                    "show": true,
+                    "title": {"bar": "柱形图切换", "stack": "堆积", "tiled": "平铺", "line": "折线图切换"},
+                    "type": ["line", "bar"]
+                },
+                "restore": {"show": true, "title": "还原"},
+                "saveAsImage": {"show": true, "title": "保存为图片", "type": "png", "lang": ["点击保存"]}
+            }, "show": true
+        },
+        "tooltip": {"trigger": "axis"},
+        "legend": {"data": ["蒸发量", "降水量"]},
+        "xAxis": [{
+            "type": "category",
+            "data": ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+        }],
+        "yAxis": [{"type": "value"}],
+        "series": [{
+            "name": "蒸发量",
+            "type": "bar",
+            "markPoint": {"data": [{"name": "最大值", "type": "max"}, {"name": "最小值", "type": "min"}]},
+            "markLine": {"data": [{"name": "平均值", "type": "average"}]},
+            "data": [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+        }, {
+            "name": "降水量",
+            "type": "bar",
+            "markPoint": {
+                "data": [{
+                    "name": "年最高",
+                    "value": 182.2,
+                    "xAxis": 7,
+                    "yAxis": 183,
+                    "symbolSize": 18
+                }, {"name": "年最低", "value": 2.3, "xAxis": 11, "yAxis": 3}]
+            },
+            "markLine": {"data": [{"name": "平均值", "type": "average"}]},
+            "data": [[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]]
+        }]
+    };
+
+    // 为echarts对象加载数据
+    myChart.setOption(option);
+</script>
+</html>

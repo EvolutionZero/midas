@@ -86,7 +86,7 @@
         for (var i = 0; i < rawData.length; i++) {
             categoryData.push(rawData[i].splice(0, 1)[0]);
             values.push(rawData[i]);
-            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]); // 升降标识值
         }
 
         return {
@@ -172,10 +172,10 @@
             seriesIndex: 1, // 数据序列展示索引，从0开始算
             dimension: 2,
             pieces: [{
-                value: 1,
+                value: 1,      // 升降标识值对应颜色
                 color: downColor
             }, {
-                value: -1,
+                value: -1, // 升降标识值对应颜色
                 color: upColor
             }]
         },

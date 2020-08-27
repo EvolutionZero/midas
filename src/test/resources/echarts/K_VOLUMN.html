@@ -72,7 +72,7 @@
 <div id="main" style="width:100%;height:100%;"></div>
 </body>
 <!-- ECharts单文件引入 -->
-<script src="./echarts-all-3.js"></script>
+<script src="echarts-all-3.js"></script>
 <script type="text/javascript">
 
     var upColor = '#00da3c';
@@ -270,11 +270,11 @@
                     formatter: function (param) {
                         param = param[0];
                         return [
-                            'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
-                            'Open: ' + param.data[0] + '<br/>',
-                            'Close: ' + param.data[1] + '<br/>',
-                            'Lowest: ' + param.data[2] + '<br/>',
-                            'Highest: ' + param.data[3] + '<br/>'
+                            '日期: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                            '开盘价: ' + param.data[0] + '<br/>',
+                            '收盘价: ' + param.data[1] + '<br/>',
+                            '最低价: ' + param.data[2] + '<br/>',
+                            '最高价: ' + param.data[3] + '<br/>'
                         ].join('');
                     }
                 }

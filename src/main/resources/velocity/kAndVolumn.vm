@@ -72,7 +72,7 @@
 <div id="main" style="width:100%;height:100%;"></div>
 </body>
 <!-- ECharts单文件引入 -->
-<script src="echarts-all-3.js"></script>
+<script src="https://lib.baomitu.com/echarts/3.8.5/echarts.min.js"></script>
 <script type="text/javascript">
 
     var upColor = '#00da3c';
@@ -243,15 +243,15 @@
             {
                 type: 'inside',
                 xAxisIndex: [0, 1],
-                start: 30, //下面进度条起始
-                end: 80 //下面进度条结束
+                start: 0, //下面进度条起始
+                end: 100 //下面进度条结束
             },
             {
                 show: true,
                 xAxisIndex: [0, 1],
                 type: 'slider',
                 top: '85%',
-                start: 0,
+                start: 50,
                 end: 100
             }
         ],
@@ -297,7 +297,7 @@
         areas: [
             {
                 brushType: 'lineX',
-                coordRange: ['2004-01-02', '2004-04-16'], // 主面板聚焦
+                coordRange: ['${focusStartDate}', '${focusEndDate}'], // 主面板聚焦
                 xAxisIndex: 0
             }
         ]

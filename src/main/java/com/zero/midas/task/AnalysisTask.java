@@ -93,6 +93,8 @@ public class AnalysisTask {
             Template template = engine.getTemplate(templateName, "UTF-8");
             VelocityContext context = new VelocityContext();
             context.put("klineDatas", kLineDataStr);
+            context.put("focusStartDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(index - 2 > 0 ? index - 2 : 0).getDate()));
+            context.put("focusEndDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(index + 0 < kline.size() ? index + 0 : kline.size()).getDate()));
             template.merge(context, stringWriter);
             FileUtils.writeStringToFile(new File(filePath), stringWriter.toString(), "UTF-8");
 //            System.out.println(stringWriter.toString());

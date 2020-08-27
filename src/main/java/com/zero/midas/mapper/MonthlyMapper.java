@@ -13,7 +13,7 @@ import java.util.List;
 public interface MonthlyMapper
         extends BaseMapper<MonthlyDO> {
 
-    @Select({"select `code`, date, open, close, high, low, price_ratio from t_monthly where `code` = #{code} order by date "})
+    @Select({"select `code`, date, open, close, high, low, price_ratio, volumn from t_monthly where `code` = #{code} order by date "})
     List<KLineNode> listKLine(@Param("code") String code);
 }
 

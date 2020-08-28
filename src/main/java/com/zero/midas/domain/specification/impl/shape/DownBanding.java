@@ -1,4 +1,4 @@
-package com.zero.midas.domain.specification.impl;
+package com.zero.midas.domain.specification.impl.shape;
 
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.specification.KLineShape;

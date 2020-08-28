@@ -1,4 +1,4 @@
-package com.zero.midas.domain.specification.impl;
+package com.zero.midas.domain.specification.impl.shape;
 
 
 import com.google.common.collect.Lists;

@@ -1,10 +1,10 @@
 package com.zero.midas.task;
 
 import com.zero.midas.domain.entity.kline.KLineNode;
-import com.zero.midas.domain.entity.report.KLineReport;
 import com.zero.midas.domain.factory.KLineFactory;
 import com.zero.midas.domain.factory.KLineReportFactory;
-import com.zero.midas.domain.specification.impl.shape.Venus;
+import com.zero.midas.domain.model.dto.CheckResultDTO;
+import com.zero.midas.domain.specification.impl.check.NotAllowFallCheck;
 import com.zero.midas.model.entity.StockDO;
 import com.zero.midas.repository.DailyRepository;
 import com.zero.midas.repository.MonthlyRepository;
@@ -20,8 +20,8 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class AnalysisTask {
-    private static final Logger log = LoggerFactory.getLogger(AnalysisTask.class);
+public class CheckTask {
+    private static final Logger log = LoggerFactory.getLogger(CheckTask.class);
 
     @Autowired
     private StockRepository stockRepository;
@@ -34,6 +34,9 @@ public class AnalysisTask {
 
     @Autowired
     private KLineFactory kLineFactory;
+
+    @Autowired
+    private NotAllowFallCheck notAllowFallCheck;
 
     @Autowired
     private KLineReportFactory kLineReportFactory;
@@ -59,11 +62,8 @@ public class AnalysisTask {
             monitor.conut();
             List<KLineNode> kLineNodes = kline.subList(0, i);
             if (kLineFactory.getKLine(kLineNodes).isVenus()) {
-                String code = kLineNodes.get(kLineNodes.size() - 1).getCode();
-                log.info("[{}][{}]判断为启明星", kLineNodes.get(kLineNodes.size() - 1).getCode(), kLineNodes.get(kLineNodes.size() - 1).getDate());
-                // 因为subList不包含i,因此实际聚焦的i是i-1
-                KLineReport kLineReport = kLineReportFactory.getKLineReport(code, name, kline, i - 1, Venus.SIZE);
-                kLineReport.exportFile();
+                CheckResultDTO check = notAllowFallCheck.check(kline.subList(i, kline.size()));
+                log.info("判断结果:{}", check.toString());
             }
         }
     }

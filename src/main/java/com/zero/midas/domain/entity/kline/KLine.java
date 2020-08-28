@@ -2,7 +2,7 @@ package com.zero.midas.domain.entity.kline;
 
 
 import com.zero.midas.domain.specification.KLineShape;
-import com.zero.midas.domain.specification.impl.Venus;
+import com.zero.midas.domain.specification.impl.shape.Venus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

@@ -38,11 +38,13 @@ public class KLineNode {
     }
 
     public BigDecimal upShadowRatio() {
-        return high.equals(open) || eq(high, low) ? new BigDecimal("0") : high.subtract(open).abs().divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal up = high.subtract(new BigDecimal(Math.max(open.doubleValue(), close.doubleValue()) + ""));
+        return eq(up, new BigDecimal("0")) ? new BigDecimal("0") : up.divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal downShadowRatio() {
-        return low.equals(close) || eq(high, low) ? new BigDecimal("0") : close.subtract(low).abs().divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal down = new BigDecimal(Math.min(open.doubleValue(), close.doubleValue()) + "").subtract(low);
+        return eq(down, new BigDecimal("0")) ? new BigDecimal("0") : down.divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
     }
 
     public List<Object> toReportData() {

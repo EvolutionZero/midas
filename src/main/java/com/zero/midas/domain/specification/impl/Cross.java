@@ -1,10 +1,12 @@
 package com.zero.midas.domain.specification.impl;
 
 
+import com.google.common.collect.Lists;
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.specification.KLineShape;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.zero.midas.utils.BigDecimalUtils.lte;
@@ -27,4 +29,16 @@ public class Cross implements KLineShape {
     public int size() {
         return SIZE;
     }
+
+
+    public static void main(String[] args) {
+        KLineNode kLineNode = new KLineNode();
+        kLineNode.setHigh(new BigDecimal("2.5"));
+        kLineNode.setClose(new BigDecimal("2.42"));
+        kLineNode.setOpen(new BigDecimal("2.15"));
+        kLineNode.setLow(new BigDecimal("2.15"));
+
+        System.out.println(new Cross().judge(Lists.newArrayList(kLineNode)));
+    }
+
 }

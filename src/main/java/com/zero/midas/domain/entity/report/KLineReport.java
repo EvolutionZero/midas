@@ -80,7 +80,7 @@ public class KLineReport {
         String baseDir = config.getOutputDir().endsWith("/") ? config.getOutputDir() : config.getOutputDir() + "/";
         try {
             FileUtils.forceMkdir(new File(baseDir));
-            String filePath = baseDir + code + "_" + name + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex()).getDate()) + ".html";
+            String filePath = baseDir + code + "_" + name.replace("*", "星") + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex()).getDate()) + ".html";
             FileUtils.writeStringToFile(new File(filePath), html, "UTF-8");
         } catch (IOException e) {
             throw new MidasException(e);

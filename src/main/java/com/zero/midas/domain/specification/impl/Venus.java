@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.zero.midas.utils.BigDecimalUtils.gte;
-import static com.zero.midas.utils.BigDecimalUtils.lte;
+import static com.zero.midas.utils.BigDecimalUtils.gt;
+import static com.zero.midas.utils.BigDecimalUtils.lt;
 
 /**
  * @author: fengzijian
@@ -39,17 +39,41 @@ public class Venus implements KLineShape {
         KLineNode crossNode = kLines.get(kLines.size() - 2);
         KLineNode upNode = kLines.get(kLines.size() - 1);
 
-        if (downBanding.judge(Lists.newArrayList(downNode))
-                && cross.judge(Lists.newArrayList(crossNode))
-                && upBanding.judge(Lists.newArrayList(upNode))
-                && lte(crossNode.getOpen(), downNode.getClose())
-                && gte(upNode.getOpen(), crossNode.getClose())) {
-            return true;
+        if (!isDownBanding(downNode)) {
+            return false;
         }
 
-        return false;
+        if (!isCross(crossNode)) {
+            return false;
+        }
+
+        if (!isUpBanding(upNode)) {
+            return false;
+        }
+
+        if (gt(crossNode.getOpen(), downNode.getClose())) {
+            return false;
+        }
+
+        if (lt(upNode.getOpen(), crossNode.getClose())) {
+            return false;
+        }
+
+
+        return true;
     }
 
+    private boolean isDownBanding(KLineNode node) {
+        return downBanding.judge(Lists.newArrayList(node));
+    }
+
+    private boolean isCross(KLineNode node) {
+        return cross.judge(Lists.newArrayList(node));
+    }
+
+    private boolean isUpBanding(KLineNode node) {
+        return upBanding.judge(Lists.newArrayList(node));
+    }
 
     @Override
     public int size() {

@@ -1,6 +1,5 @@
 package com.zero.midas.task;
 
-import com.zero.midas.domain.entity.kline.KLine;
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.entity.report.KLineReport;
 import com.zero.midas.domain.factory.KLineFactory;
@@ -59,11 +58,11 @@ public class AnalysisTask {
         for (int i = 1; i < kline.size(); i++) {
             monitor.conut();
             List<KLineNode> kLineNodes = kline.subList(0, i);
-            KLine kLine = kLineFactory.getKLine(kLineNodes);
-            if (kLine.isVenus()) {
+            if (kLineFactory.getKLine(kLineNodes).isVenus()) {
                 String code = kLineNodes.get(kLineNodes.size() - 1).getCode();
                 log.info("[{}][{}]判断为启明星", kLineNodes.get(kLineNodes.size() - 1).getCode(), kLineNodes.get(kLineNodes.size() - 1).getDate());
-                KLineReport kLineReport = kLineReportFactory.getKLineReport(code, name, kline, i, Venus.SIZE);
+                // 因为subList不包含i,因此实际聚焦的i是i-1
+                KLineReport kLineReport = kLineReportFactory.getKLineReport(code, name, kline, i - 1, Venus.SIZE);
                 kLineReport.exportFile();
             }
         }

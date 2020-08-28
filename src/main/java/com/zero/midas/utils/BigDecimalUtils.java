@@ -1,6 +1,7 @@
 package com.zero.midas.utils;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author: fengzijian
@@ -47,5 +48,13 @@ public class BigDecimalUtils {
 
     public static boolean eq(BigDecimal x, BigDecimal y) {
         return x.compareTo(new BigDecimal(y + "")) == 0;
+    }
+
+    public static BigDecimal sum(List<BigDecimal> datas) {
+        BigDecimal sum = new BigDecimal("0");
+        for (BigDecimal data : datas) {
+            sum = sum.add(data);
+        }
+        return sum;
     }
 }

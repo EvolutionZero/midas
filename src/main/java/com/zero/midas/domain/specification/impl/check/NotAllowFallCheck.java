@@ -25,8 +25,8 @@ public class NotAllowFallCheck implements Check {
             return checkResultDTO;
         }
         BigDecimal startPrice = kLines.get(0).getClose();
-        BigDecimal endPrice = startPrice;
-        for (int i = 1; i < kLines.size(); i++) {
+        BigDecimal endPrice = kLines.get(kLines.size() - 1).getClose();
+        for (int i = 1; i < (kLines.size() > 15 ? 15 : kLines.size()); i++) {
             KLineNode per = kLines.get(i - 1);
             KLineNode cur = kLines.get(i);
             if (lt(cur.getOpen(), per.getClose())) {
@@ -35,7 +35,7 @@ public class NotAllowFallCheck implements Check {
             }
             checkResultDTO.addCycle();
         }
-        checkResultDTO.setPercent(endPrice.subtract(startPrice).divide(startPrice, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")));
+        checkResultDTO.setPercent(endPrice.subtract(startPrice).divide(startPrice, 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")));
         return checkResultDTO;
     }
 }

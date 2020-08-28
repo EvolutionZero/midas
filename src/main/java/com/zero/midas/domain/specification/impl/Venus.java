@@ -32,7 +32,7 @@ public class Venus implements KLineShape {
 
     @Override
     public boolean judge(List<KLineNode> kLines) {
-        if (kLines.size() < 3) {
+        if (kLines.size() < SIZE) {
             return false;
         }
         KLineNode downNode = kLines.get(kLines.size() - 3);

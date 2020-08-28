@@ -67,6 +67,7 @@ public class KLineReport {
         StringWriter stringWriter = new StringWriter();
         Template template = engine.getTemplate(templateName, "UTF-8");
         VelocityContext context = new VelocityContext();
+        context.put("title", code + "_" + name + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex()).getDate()));
         context.put("klineDatas", kLineDataStr);
         context.put("focusStartDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex() - (config.getFocusBackOffSize() - 1) > 0 ? config.getFocusIndex() - (config.getFocusBackOffSize() - 1) : 0).getDate()));
         context.put("focusEndDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex() + 0 < kline.size() ? config.getFocusIndex() + 0 : kline.size()).getDate()));

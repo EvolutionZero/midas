@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ECharts - Generate By @isea533/abel533</title>
+    <title>${title}</title>
     <style>* {
         margin: 0
     }
@@ -289,7 +289,6 @@
         ]
     };
 
-    setTimeout(1000);
     // 为echarts对象加载数据
     myChart.setOption(option);
     myChart.dispatchAction({

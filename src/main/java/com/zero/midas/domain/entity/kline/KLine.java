@@ -1,7 +1,7 @@
 package com.zero.midas.domain.entity.kline;
 
 
-import com.zero.midas.domain.specification.Specification;
+import com.zero.midas.domain.specification.KLineShape;
 import com.zero.midas.domain.specification.impl.Venus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class KLine {
 
     @Autowired
-    private Map<String, Specification> specifications;
+    private Map<String, KLineShape> specifications;
 
     private List<KLineNode> klines;
 

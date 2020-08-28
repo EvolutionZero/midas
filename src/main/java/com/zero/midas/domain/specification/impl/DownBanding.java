@@ -1,7 +1,7 @@
 package com.zero.midas.domain.specification.impl;
 
 import com.zero.midas.domain.entity.kline.KLineNode;
-import com.zero.midas.domain.specification.Specification;
+import com.zero.midas.domain.specification.KLineShape;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +17,9 @@ import static com.zero.midas.utils.BigDecimalUtils.lt;
  * @Description:
  */
 @Component
-public class DownBanding implements Specification {
+public class DownBanding implements KLineShape {
+
+    public static final int SIZE = 1;
 
     @Override
     public boolean judge(List<KLineNode> kLines) {
@@ -37,4 +39,8 @@ public class DownBanding implements Specification {
         return true;
     }
 
+    @Override
+    public int size() {
+        return SIZE;
+    }
 }

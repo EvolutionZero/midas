@@ -2,7 +2,7 @@ package com.zero.midas.domain.specification.impl;
 
 import com.google.common.collect.Lists;
 import com.zero.midas.domain.entity.kline.KLineNode;
-import com.zero.midas.domain.specification.Specification;
+import com.zero.midas.domain.specification.KLineShape;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,9 @@ import static com.zero.midas.utils.BigDecimalUtils.lte;
  * @Description:
  */
 @Component
-public class Venus implements Specification {
+public class Venus implements KLineShape {
+
+    public static final int SIZE = 3;
 
     @Autowired
     private Cross cross;
@@ -48,4 +50,9 @@ public class Venus implements Specification {
         return false;
     }
 
+
+    @Override
+    public int size() {
+        return SIZE;
+    }
 }

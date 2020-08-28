@@ -11,7 +11,9 @@ import java.util.List;
  * @since: 2020/8/17 16:50
  * @Description:
  */
-public interface Specification {
+public interface KLineShape {
 
     boolean judge(List<KLineNode> kLines);
+
+    int size();
 }

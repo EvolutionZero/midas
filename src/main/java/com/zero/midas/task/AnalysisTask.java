@@ -2,31 +2,22 @@ package com.zero.midas.task;
 
 import com.zero.midas.domain.entity.kline.KLine;
 import com.zero.midas.domain.entity.kline.KLineNode;
+import com.zero.midas.domain.entity.report.KLineReport;
 import com.zero.midas.domain.factory.KLineFactory;
+import com.zero.midas.domain.factory.KLineReportFactory;
+import com.zero.midas.domain.specification.impl.Venus;
 import com.zero.midas.model.entity.StockDO;
 import com.zero.midas.repository.DailyRepository;
 import com.zero.midas.repository.MonthlyRepository;
 import com.zero.midas.repository.StockRepository;
-import com.zero.midas.utils.JsonUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -45,11 +36,14 @@ public class AnalysisTask {
     @Autowired
     private KLineFactory kLineFactory;
 
+    @Autowired
+    private KLineReportFactory kLineReportFactory;
+
     public void analysisMonthly() {
         List<StockDO> stocks = this.stockRepository.list();
         Monitor monitor = new Monitor();
         monitor.setStart(System.currentTimeMillis());
-        stocks.forEach(stock -> analysis(monthlyRepository.listKLine(stock.getCode()), monitor));
+        stocks.forEach(stock -> analysis(stock.getName(), monthlyRepository.listKLine(stock.getCode()), monitor));
         log.info("分析启明星:[{}]TPS", monitor.getCalculate() * 1.0 / ((System.currentTimeMillis() - monitor.getStart()) / 1000.0));
     }
 
@@ -57,49 +51,21 @@ public class AnalysisTask {
         List<StockDO> stocks = this.stockRepository.list();
         Monitor monitor = new Monitor();
         monitor.setStart(System.currentTimeMillis());
-        stocks.forEach(stock -> analysis(dailyRepository.listKLine(stock.getCode()), monitor));
+        stocks.forEach(stock -> analysis(stock.getName(), dailyRepository.listKLine(stock.getCode()), monitor));
         log.info("分析启明星:[{}]TPS", monitor.getCalculate() * 1.0 / ((System.currentTimeMillis() - monitor.getStart()) / 1000.0));
     }
 
-    private void analysis(List<KLineNode> kline, Monitor monitor) {
+    private void analysis(String name, List<KLineNode> kline, Monitor monitor) {
         for (int i = 1; i < kline.size(); i++) {
             monitor.conut();
             List<KLineNode> kLineNodes = kline.subList(0, i);
             KLine kLine = kLineFactory.getKLine(kLineNodes);
             if (kLine.isVenus()) {
+                String code = kLineNodes.get(kLineNodes.size() - 1).getCode();
                 log.info("[{}][{}]判断为启明星", kLineNodes.get(kLineNodes.size() - 1).getCode(), kLineNodes.get(kLineNodes.size() - 1).getDate());
-                report(kline, i);
+                KLineReport kLineReport = kLineReportFactory.getKLineReport(code, name, kline, i, Venus.SIZE);
+                kLineReport.exportFile();
             }
-        }
-    }
-
-    private void report(List<KLineNode> kline, int index) {
-        List<KLineNode> showKLineNodes = kline.subList(index - 60 > 0 ? index - 60 : 0, index + 15 < kline.size() ? index + 15 : kline.size());
-        List<List<Object>> kLineData = showKLineNodes.stream().map(KLineNode::toReportData).collect(Collectors.toList());
-        String kLineDataStr = "\"" + JsonUtils.stringify(kLineData).replace("\"", "\\\"") + "\"";
-        Properties properties = new Properties();
-        properties.setProperty("file.resource.loader.class",
-                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-        properties.setProperty(Velocity.ENCODING_DEFAULT, "UTF-8");
-        properties.setProperty(Velocity.INPUT_ENCODING, "UTF-8");
-        VelocityEngine engine = new VelocityEngine();
-        engine.init(properties);
-        String templateName = "velocity/kAndVolumn.vm";
-        try {
-            String filePath = "./report/" + kline.get(0).getCode() + "_" + DateTimeFormatter.ofPattern("yyyyMMdd").format(kline.get(index).getDate()) + ".html";
-
-//            FileWriter fileWriter = new FileWriter(filePath);
-            StringWriter stringWriter = new StringWriter();
-            Template template = engine.getTemplate(templateName, "UTF-8");
-            VelocityContext context = new VelocityContext();
-            context.put("klineDatas", kLineDataStr);
-            context.put("focusStartDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(index - 2 > 0 ? index - 2 : 0).getDate()));
-            context.put("focusEndDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(index + 0 < kline.size() ? index + 0 : kline.size()).getDate()));
-            template.merge(context, stringWriter);
-            FileUtils.writeStringToFile(new File(filePath), stringWriter.toString(), "UTF-8");
-//            System.out.println(stringWriter.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

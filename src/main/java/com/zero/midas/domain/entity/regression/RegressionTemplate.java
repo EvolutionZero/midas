@@ -13,7 +13,9 @@ import com.zero.midas.repository.DailyRepository;
 import com.zero.midas.repository.MonthlyRepository;
 import com.zero.midas.repository.StockRepository;
 import com.zero.midas.repository.WeeklyRepository;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -71,19 +73,20 @@ public abstract class RegressionTemplate {
     }
 
     public void analysis(Function<String, List<KLineNode>> function) {
-        List<CheckResultDTO> results = new LinkedList<>();
+        List<RegressionRecord> results = new LinkedList<>();
         List<StockDO> stocks = this.stockRepository.list();
         VelocityMonitor monitor = new VelocityMonitor();
         monitor.setStart(System.currentTimeMillis());
         stocks.forEach(stock -> results.addAll(analysis(stock.getName(), function.apply(stock.getCode()), monitor)));
         log.info("分析{}:[{}]TPS", shape().name(), monitor.getCount() * 1.0 / ((System.currentTimeMillis() - monitor.getStart()) / 1000.0));
-        int up = results.stream().filter(r -> gt(r.getPercent(), new BigDecimal("0"))).collect(Collectors.toList()).size();
-        List<BigDecimal> percents = results.stream().map(CheckResultDTO::getPercent).collect(Collectors.toList());
+        int up = results.stream().map(RegressionRecord::getCheck).filter(r -> gt(r.getPercent(), new BigDecimal("0"))).collect(Collectors.toList()).size();
+        List<BigDecimal> percents = results.stream().map(RegressionRecord::getCheck).map(CheckResultDTO::getPercent).collect(Collectors.toList());
         log.info("总收益百分比:{}, 正确率: {}/{} = {}", sum(percents), up, results.size(), up * 1.0 / results.size());
+        report(results);
     }
 
-    private List<CheckResultDTO> analysis(String name, List<KLineNode> kline, VelocityMonitor monitor) {
-        List<CheckResultDTO> results = new LinkedList<>();
+    private List<RegressionRecord> analysis(String name, List<KLineNode> kline, VelocityMonitor monitor) {
+        List<RegressionRecord> results = new LinkedList<>();
         for (int i = 1; i < kline.size(); i++) {
             monitor.conut();
             List<KLineNode> kLineNodes = kline.subList(0, i);
@@ -95,13 +98,31 @@ public abstract class RegressionTemplate {
                         kLineNodes.get(kLineNodes.size() - 1).getDate(),
                         shape().name());
                 CheckResultDTO check = checker().check(kline.subList(i, kline.size()));
-                results.add(check);
                 // 因为subList不包含i,因此实际聚焦的i是i-1
-                KLineReport kLineReport = kLineReportFactory.getKLineReport(code, name, kline, i - 1, Venus.SIZE);
-                kLineReport.exportFile();
+                KLineReport report = kLineReportFactory.getKLineReport(code, name, kline, i - 1, shape().size());
+                String subDir = shape().name() + "/" + (check.correct() ? "正确" : check.balance() ? "平衡" : "错误");
+                report.getConfig().setOutputDir(report.getConfig().getOutputDir() + subDir);
+
+                results.add(new RegressionRecord(check, report));
             }
         }
         return results;
+    }
+
+    protected void report(List<RegressionRecord> records){
+        records.stream().map(RegressionRecord::getReport).forEach(KLineReport::exportFile);
+    }
+
+
+    /**
+     * 回归记录，对应单交易周期预测结果记录
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RegressionRecord{
+        private CheckResultDTO check;
+        private KLineReport report;
     }
 
     /**

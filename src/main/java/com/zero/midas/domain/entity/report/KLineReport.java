@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Data
 public class KLineReport {
 
     private String code;
@@ -56,7 +57,7 @@ public class KLineReport {
         List<List<Object>> kLineData = showKLineNodes.stream().map(KLineNode::toReportData).collect(Collectors.toList());
         String kLineDataStr = "\"" + JsonUtils.stringify(kLineData).replace("\"", "\\\"") + "\"";
         Properties properties = new Properties();
-        properties.setProperty("file.resource.loader.class",
+        properties.setProperty("resource.loader.file.class",
                 "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         properties.setProperty(Velocity.ENCODING_DEFAULT, "UTF-8");
         properties.setProperty(Velocity.INPUT_ENCODING, "UTF-8");

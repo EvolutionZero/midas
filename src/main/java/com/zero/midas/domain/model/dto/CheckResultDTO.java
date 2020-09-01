@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+import static com.zero.midas.utils.BigDecimalUtils.eq;
 import static com.zero.midas.utils.BigDecimalUtils.gt;
 
 /**
@@ -32,5 +33,8 @@ public class CheckResultDTO {
         return gt(percent, new BigDecimal("0"));
     }
 
+    public boolean balance(){
+        return eq(percent, new BigDecimal("0"));
+    }
 
 }

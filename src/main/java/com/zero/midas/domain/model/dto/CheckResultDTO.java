@@ -4,6 +4,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+import static com.zero.midas.utils.BigDecimalUtils.gt;
+
 /**
  * @author: fengzijian
  * @since: 2020/8/28 17:13
@@ -24,6 +26,10 @@ public class CheckResultDTO {
 
     public void addCycle() {
         this.cycle += 1;
+    }
+
+    public boolean correct(){
+        return gt(percent, new BigDecimal("0"));
     }
 
 

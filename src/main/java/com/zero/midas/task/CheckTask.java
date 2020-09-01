@@ -4,7 +4,7 @@ import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.factory.KLineFactory;
 import com.zero.midas.domain.factory.KLineReportFactory;
 import com.zero.midas.domain.model.dto.CheckResultDTO;
-import com.zero.midas.domain.specification.impl.check.NotAllowFallCheck;
+import com.zero.midas.domain.specification.impl.check.NotAllowFallChecker;
 import com.zero.midas.model.entity.StockDO;
 import com.zero.midas.repository.DailyRepository;
 import com.zero.midas.repository.MonthlyRepository;
@@ -43,7 +43,7 @@ public class CheckTask {
     private KLineFactory kLineFactory;
 
     @Autowired
-    private NotAllowFallCheck notAllowFallCheck;
+    private NotAllowFallChecker notAllowFallCheck;
 
     @Autowired
     private KLineReportFactory kLineReportFactory;

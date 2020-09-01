@@ -12,7 +12,7 @@ import java.util.List;
  * @since: 2020/8/17 16:50
  * @Description:
  */
-public interface Check {
+public interface Checker {
 
     CheckResultDTO check(List<KLineNode> kLines);
 

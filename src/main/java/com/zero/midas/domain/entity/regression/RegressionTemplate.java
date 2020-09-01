@@ -1,8 +1,11 @@
 package com.zero.midas.domain.entity.regression;
 
+import com.zero.midas.domain.entity.kline.KLine;
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.entity.report.KLineReport;
 import com.zero.midas.domain.factory.KLineReportFactory;
+import com.zero.midas.domain.model.dto.CheckResultDTO;
+import com.zero.midas.domain.specification.Checker;
 import com.zero.midas.domain.specification.KLineShape;
 import com.zero.midas.domain.specification.impl.shape.Venus;
 import com.zero.midas.model.entity.StockDO;
@@ -15,7 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.zero.midas.utils.BigDecimalUtils.gt;
+import static com.zero.midas.utils.BigDecimalUtils.sum;
 
 /**
  * @author: fengzijian
@@ -43,33 +54,36 @@ public abstract class RegressionTemplate {
 
     protected abstract KLineShape shape();
 
+    protected abstract Checker checker();
+
 
     public void daily() {
-        List<StockDO> stocks = this.stockRepository.list();
-        VelocityMonitor monitor = new VelocityMonitor();
-        monitor.setStart(System.currentTimeMillis());
-        stocks.forEach(stock -> analysis(stock.getName(), dailyRepository.listKLine(stock.getCode()), monitor));
-        log.info("分析{}:[{}]TPS", shape().name(), monitor.getCount() * 1.0 / ((System.currentTimeMillis() - monitor.getStart()) / 1000.0));
+        analysis( code -> dailyRepository.listKLine(code));
     }
 
 
     public void weekly() {
-        List<StockDO> stocks = this.stockRepository.list();
-        VelocityMonitor monitor = new VelocityMonitor();
-        monitor.setStart(System.currentTimeMillis());
-        stocks.forEach(stock -> analysis(stock.getName(), weeklyRepository.listKLine(stock.getCode()), monitor));
-        log.info("分析{}:[{}]TPS", shape().name(), monitor.getCount() * 1.0 / ((System.currentTimeMillis() - monitor.getStart()) / 1000.0));
+        analysis( code -> weeklyRepository.listKLine(code));
     }
 
     public void monthly() {
+        analysis( code -> monthlyRepository.listKLine(code));
+    }
+
+    public void analysis(Function<String, List<KLineNode>> function) {
+        List<CheckResultDTO> results = new LinkedList<>();
         List<StockDO> stocks = this.stockRepository.list();
         VelocityMonitor monitor = new VelocityMonitor();
         monitor.setStart(System.currentTimeMillis());
-        stocks.forEach(stock -> analysis(stock.getName(), monthlyRepository.listKLine(stock.getCode()), monitor));
+        stocks.forEach(stock -> results.addAll(analysis(stock.getName(), function.apply(stock.getCode()), monitor)));
         log.info("分析{}:[{}]TPS", shape().name(), monitor.getCount() * 1.0 / ((System.currentTimeMillis() - monitor.getStart()) / 1000.0));
+        int up = results.stream().filter(r -> gt(r.getPercent(), new BigDecimal("0"))).collect(Collectors.toList()).size();
+        List<BigDecimal> percents = results.stream().map(CheckResultDTO::getPercent).collect(Collectors.toList());
+        log.info("总收益百分比:{}, 正确率: {}/{} = {}", sum(percents), up, results.size(), up * 1.0 / results.size());
     }
 
-    private void analysis(String name, List<KLineNode> kline, VelocityMonitor monitor) {
+    private List<CheckResultDTO> analysis(String name, List<KLineNode> kline, VelocityMonitor monitor) {
+        List<CheckResultDTO> results = new LinkedList<>();
         for (int i = 1; i < kline.size(); i++) {
             monitor.conut();
             List<KLineNode> kLineNodes = kline.subList(0, i);
@@ -80,11 +94,14 @@ public abstract class RegressionTemplate {
                         kLineNodes.get(kLineNodes.size() - 1).getCode(),
                         kLineNodes.get(kLineNodes.size() - 1).getDate(),
                         shape().name());
+                CheckResultDTO check = checker().check(kline.subList(i, kline.size()));
+                results.add(check);
                 // 因为subList不包含i,因此实际聚焦的i是i-1
                 KLineReport kLineReport = kLineReportFactory.getKLineReport(code, name, kline, i - 1, Venus.SIZE);
                 kLineReport.exportFile();
             }
         }
+        return results;
     }
 
     /**

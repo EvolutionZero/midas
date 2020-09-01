@@ -2,7 +2,7 @@ package com.zero.midas.domain.specification.impl.check;
 
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.model.dto.CheckResultDTO;
-import com.zero.midas.domain.specification.Check;
+import com.zero.midas.domain.specification.Checker;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import static com.zero.midas.utils.BigDecimalUtils.lt;
  * @Description:
  */
 @Component
-public class NotAllowFallCheck implements Check {
+public class NotAllowFallChecker implements Checker {
 
     @Override
     public CheckResultDTO check(List<KLineNode> kLines) {

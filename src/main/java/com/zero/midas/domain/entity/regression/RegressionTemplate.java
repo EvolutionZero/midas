@@ -1,13 +1,11 @@
 package com.zero.midas.domain.entity.regression;
 
-import com.zero.midas.domain.entity.kline.KLine;
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.domain.entity.report.KLineReport;
 import com.zero.midas.domain.factory.KLineReportFactory;
 import com.zero.midas.domain.model.dto.CheckResultDTO;
 import com.zero.midas.domain.specification.Checker;
 import com.zero.midas.domain.specification.KLineShape;
-import com.zero.midas.domain.specification.impl.shape.Venus;
 import com.zero.midas.model.entity.StockDO;
 import com.zero.midas.repository.DailyRepository;
 import com.zero.midas.repository.MonthlyRepository;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -99,7 +96,7 @@ public abstract class RegressionTemplate {
                         shape().name());
                 CheckResultDTO check = checker().check(kline.subList(i, kline.size()));
                 // 因为subList不包含i,因此实际聚焦的i是i-1
-                KLineReport report = kLineReportFactory.getKLineReport(code, name, kline, i - 1, shape().size());
+                KLineReport report = kLineReportFactory.getKLineReport(code, name, kline, i - 1, shape().size() + check.getCycle());
                 String subDir = shape().name() + "/" + (check.correct() ? "正确" : check.balance() ? "平衡" : "错误");
                 report.getConfig().setOutputDir(report.getConfig().getOutputDir() + subDir);
 

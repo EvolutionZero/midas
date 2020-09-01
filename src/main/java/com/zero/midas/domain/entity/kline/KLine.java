@@ -26,7 +26,7 @@ public class KLine {
     }
 
     public boolean isVenus() {
-        return Optional.ofNullable(specifications.get(Venus.class.getSimpleName().toLowerCase())).map(pattern -> pattern.judge(klines)).orElse(false);
+        return Optional.ofNullable(specifications.get(Venus.class.getSimpleName().toLowerCase())).map(shape -> shape.judge(klines)).orElse(false);
     }
 
 }

@@ -16,6 +16,12 @@ public class Cross implements KLineShape {
 
     public static final int SIZE = 1;
 
+
+    @Override
+    public String name() {
+        return "十字星";
+    }
+
     @Override
     public boolean judge(List<KLineNode> kLines) {
         if (kLines.isEmpty()) {

@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface KLineShape {
 
+    String name();
+
     boolean judge(List<KLineNode> kLines);
 
     int size();

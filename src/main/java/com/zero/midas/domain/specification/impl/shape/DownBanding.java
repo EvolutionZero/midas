@@ -21,6 +21,12 @@ public class DownBanding implements KLineShape {
 
     public static final int SIZE = 1;
 
+
+    @Override
+    public String name() {
+        return "看跌捉腰带线";
+    }
+
     @Override
     public boolean judge(List<KLineNode> kLines) {
         if (kLines.isEmpty()) {

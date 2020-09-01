@@ -31,6 +31,11 @@ public class Venus implements KLineShape {
     private UpBanding upBanding;
 
     @Override
+    public String name() {
+        return "启明星";
+    }
+
+    @Override
     public boolean judge(List<KLineNode> kLines) {
         if (kLines.size() < SIZE) {
             return false;

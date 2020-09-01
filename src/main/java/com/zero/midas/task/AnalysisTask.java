@@ -21,7 +21,6 @@ import java.util.List;
 @Component
 @Slf4j
 public class AnalysisTask {
-    private static final Logger log = LoggerFactory.getLogger(AnalysisTask.class);
 
     @Autowired
     private StockRepository stockRepository;

@@ -96,7 +96,7 @@ public abstract class RegressionTemplate {
                         shape().name());
                 CheckResultDTO check = checker().check(kline.subList(i, kline.size()));
                 // 因为subList不包含i,因此实际聚焦的i是i-1
-                KLineReport report = kLineReportFactory.getKLineReport(code, name, kline, i - 1, shape().size() + check.getCycle());
+                KLineReport report = kLineReportFactory.getKLineReport(code, name, kline, i - 1, shape().size());
                 String subDir = shape().name() + "/" + (check.correct() ? "正确" : check.balance() ? "平衡" : "错误");
                 report.getConfig().setOutputDir(report.getConfig().getOutputDir() + subDir);
 

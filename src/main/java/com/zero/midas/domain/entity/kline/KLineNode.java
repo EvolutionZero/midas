@@ -32,6 +32,15 @@ public class KLineNode {
         return open.compareTo(close) > 0;
     }
 
+    /**
+     * 当前周期变化百分比, 本周期开盘价和收盘价的升降比
+     *
+     * @return
+     */
+    public BigDecimal currentCycleChangePercent() {
+        return close.subtract(open).subtract(downShadowRatio()).divide(open, 4, BigDecimal.ROUND_HALF_UP);
+    }
+
     public BigDecimal entityRatio() {
         BigDecimal ratio = new BigDecimal("1").subtract(upShadowRatio()).subtract(downShadowRatio());
         return ratio.compareTo(new BigDecimal("0")) > 0 ? ratio : new BigDecimal("0");
@@ -39,12 +48,12 @@ public class KLineNode {
 
     public BigDecimal upShadowRatio() {
         BigDecimal up = high.subtract(new BigDecimal(Math.max(open.doubleValue(), close.doubleValue()) + ""));
-        return eq(up, new BigDecimal("0")) ? new BigDecimal("0") : up.divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
+        return eq(up, new BigDecimal("0")) ? new BigDecimal("0") : up.divide(high.subtract(low), 4, BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal downShadowRatio() {
         BigDecimal down = new BigDecimal(Math.min(open.doubleValue(), close.doubleValue()) + "").subtract(low);
-        return eq(down, new BigDecimal("0")) ? new BigDecimal("0") : down.divide(high.subtract(low), 2, BigDecimal.ROUND_HALF_UP);
+        return eq(down, new BigDecimal("0")) ? new BigDecimal("0") : down.divide(high.subtract(low), 4, BigDecimal.ROUND_HALF_UP);
     }
 
     public List<Object> toReportData() {

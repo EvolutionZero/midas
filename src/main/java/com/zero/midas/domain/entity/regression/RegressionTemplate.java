@@ -6,6 +6,7 @@ import com.zero.midas.domain.factory.KLineReportFactory;
 import com.zero.midas.domain.model.dto.CheckResultDTO;
 import com.zero.midas.domain.specification.Checker;
 import com.zero.midas.domain.specification.KLineShape;
+import com.zero.midas.model._do.WatchWindow;
 import com.zero.midas.model.entity.StockDO;
 import com.zero.midas.repository.DailyRepository;
 import com.zero.midas.repository.MonthlyRepository;
@@ -84,19 +85,18 @@ public abstract class RegressionTemplate {
 
     private List<RegressionRecord> analysis(String name, List<KLineNode> kline, VelocityMonitor monitor) {
         List<RegressionRecord> results = new LinkedList<>();
-        for (int i = 1; i < kline.size(); i++) {
+        for (int i = 0; i < kline.size(); i++) {
             monitor.conut();
-            List<KLineNode> kLineNodes = kline.subList(0, i);
-
-            if (shape().judge(kLineNodes)) {
-                String code = kLineNodes.get(kLineNodes.size() - 1).getCode();
+            WatchWindow watchWindow = new WatchWindow(i, kline);
+            watchWindow.setName(name);
+            if (shape().judge(watchWindow.judegeNodes())) {
+                String code = watchWindow.getCode();
                 log.info("[{}][{}]判断为{}",
-                        kLineNodes.get(kLineNodes.size() - 1).getCode(),
-                        kLineNodes.get(kLineNodes.size() - 1).getDate(),
+                        code,
+                        watchWindow.focusNode().getDate(),
                         shape().name());
                 CheckResultDTO check = checker().check(kline.subList(i, kline.size()));
-                // 因为subList不包含i,因此实际聚焦的i是i-1
-                KLineReport report = kLineReportFactory.getKLineReport(code, name, kline, i - 1, shape().size());
+                KLineReport report = kLineReportFactory.getKLineReport(watchWindow, shape().size());
                 String subDir = shape().name() + "/" + (check.correct() ? "正确" : check.balance() ? "平衡" : "错误");
                 report.getConfig().setOutputDir(report.getConfig().getOutputDir() + subDir);
 

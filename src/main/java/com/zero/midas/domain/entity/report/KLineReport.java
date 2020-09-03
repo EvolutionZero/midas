@@ -2,6 +2,7 @@ package com.zero.midas.domain.entity.report;
 
 import com.zero.midas.domain.entity.kline.KLineNode;
 import com.zero.midas.exception.MidasException;
+import com.zero.midas.model._do.WatchWindow;
 import com.zero.midas.utils.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,27 +35,17 @@ import java.util.stream.Collectors;
 @Data
 public class KLineReport {
 
-    private String code;
-    private String name;
-    private List<KLineNode> kline;
+    private WatchWindow watchWindow;
 
     private Config config;
 
-    public KLineReport(String cod, String name, List<KLineNode> kline, Config config) {
-        this.code = cod;
-        this.name = name;
-        this.kline = kline;
+    public KLineReport(WatchWindow watchWindow, Config config) {
+        this.watchWindow = watchWindow;
         this.config = config;
     }
 
-    public static void main(String[] args) {
-        Config config = new Config().setFocusIndex(1).setFocusBackOffSize(3);
-        System.out.println(config.toString());
-    }
-
     public String toHtml() {
-        List<KLineNode> showKLineNodes = kline.subList(config.getFocusIndex() - config.getBackOffSize() > 0 ? config.getFocusIndex() - config.getBackOffSize() : 0, config.getFocusIndex() + config.getForwardSize() < kline.size() ? config.getFocusIndex() + config.getForwardSize() : kline.size());
-        List<List<Object>> kLineData = showKLineNodes.stream().map(KLineNode::toReportData).collect(Collectors.toList());
+        List<List<Object>> kLineData = watchWindow.getNodes().stream().map(KLineNode::toReportData).collect(Collectors.toList());
         String kLineDataStr = "\"" + JsonUtils.stringify(kLineData).replace("\"", "\\\"") + "\"";
         Properties properties = new Properties();
         properties.setProperty("resource.loader.file.class",
@@ -68,10 +59,10 @@ public class KLineReport {
         StringWriter stringWriter = new StringWriter();
         Template template = engine.getTemplate(templateName, "UTF-8");
         VelocityContext context = new VelocityContext();
-        context.put("title", code + "_" + name + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex()).getDate()));
+        context.put("title", watchWindow.getCode() + "_" + watchWindow.getName() + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(watchWindow.focusNode().getDate()));
         context.put("klineDatas", kLineDataStr);
-        context.put("focusStartDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex() - (config.getFocusBackOffSize() - 1) > 0 ? config.getFocusIndex() - (config.getFocusBackOffSize() - 1) : 0).getDate()));
-        context.put("focusEndDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex() + 0 < kline.size() ? config.getFocusIndex() + 0 : kline.size()).getDate()));
+        context.put("focusStartDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(watchWindow.getFocus() - (config.getFocusBackOffSize() - 1) > 0 ? watchWindow.getNodes().get(watchWindow.getFocus() - (config.getFocusBackOffSize() - 1)).getDate() : watchWindow.getNodes().get(0).getDate()));
+        context.put("focusEndDate", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(watchWindow.focusNode().getDate()));
         template.merge(context, stringWriter);
         return stringWriter.toString();
     }
@@ -81,7 +72,7 @@ public class KLineReport {
         String baseDir = config.getOutputDir().endsWith("/") ? config.getOutputDir() : config.getOutputDir() + "/";
         try {
             FileUtils.forceMkdir(new File(baseDir));
-            String filePath = baseDir + code + "_" + name.replace("*", "星") + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(kline.get(config.getFocusIndex()).getDate()) + ".html";
+            String filePath = baseDir + watchWindow.getCode() + "_" + watchWindow.getName().replace("*", "星") + "_" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(watchWindow.focusNode().getDate()) + ".html";
             FileUtils.writeStringToFile(new File(filePath), html, "UTF-8");
         } catch (IOException e) {
             throw new MidasException(e);
@@ -93,26 +84,11 @@ public class KLineReport {
     @AllArgsConstructor
     @Accessors(chain = true)
     public static class Config {
-        /**
-         * 聚焦位置索引
-         */
-        private int focusIndex;
 
         /**
          * 聚焦回退周期数
          */
         private int focusBackOffSize;
-
-        /**
-         * 回退周期数
-         */
-
-        private int backOffSize = 60;
-
-        /**
-         * 前进预测周期数
-         */
-        private int forwardSize = 15;
 
         /**
          * 输出目录

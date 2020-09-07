@@ -1,10 +1,18 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: 'jdbc:mysql://127.0.0.1:3306/midas?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true'
-    username: root
-    password: root
-    # Hikari 连接池配置
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master，如果读者只是单数据源只需要注释掉slave相关配置即可，这里为了方便演示master与slave保持相同
+      datasource:
+        master:
+          url: jdbc:mysql://127.0.0.1:3306/midas?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+          username: root
+          password: root
+          driverClassName:  com.mysql.cj.jdbc.Driver
+        slave:
+          url: jdbc:sqlite:‪stock_base.db
+          username:
+          password:
+          driverClassName:  org.sqlite.JDBC
     hikari:
     # 最小空闲连接数量
       minimum-idle: 5
@@ -22,6 +30,29 @@ spring:
       connection-timeout: 250
       connection-test-query: SELECT 1
       validation-timeout: 250
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: 'jdbc:mysql://127.0.0.1:3306/midas?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true'
+#    username: root
+#    password: root
+#    # Hikari 连接池配置
+#    hikari:
+#    # 最小空闲连接数量
+#      minimum-idle: 5
+#      # 空闲连接存活最大时间，默认600000（10分钟）
+#      idle-timeout: 180000
+#      # 连接池最大连接数，默认是10
+#      maximum-pool-size: 10
+#      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+#      auto-commit: true
+#      # 连接池名称
+#      pool-name: MyHikariCP
+#      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+#      max-lifetime: 600000
+#      # 数据库连接超时时间,默认30秒，即30000
+#      connection-timeout: 250
+#      connection-test-query: SELECT 1
+#      validation-timeout: 250
+
 #    druid:
 #      #初始化大小
 #      initialSize: 5

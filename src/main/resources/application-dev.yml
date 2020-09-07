@@ -9,7 +9,7 @@ spring:
           password: root
           driverClassName:  com.mysql.cj.jdbc.Driver
         slave:
-          url: jdbc:sqlite:‪stock_base.db
+          url: jdbc:sqlite:D:\IdeaProjects\midas\stock_day.db
           username:
           password:
           driverClassName:  org.sqlite.JDBC

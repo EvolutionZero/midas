@@ -1,37 +1,33 @@
 package com.zero.midas.model.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
-@TableName("t_daily1")
-public class DailyDO {
+@TableName("StockDayData")
+public class StockDayDataDO {
 
     @TableField("`code`")
     private String code;
-    private LocalDate date;
-    @TableField("`open`")
+    @TableField("`StatDate`")
+    private String date;
+    @TableField("`StartPrice`")
     private BigDecimal open;
+    @TableField("`HighPrice`")
     private BigDecimal high;
-    @TableField("`close`")
+    @TableField("`EndPrice`")
     private BigDecimal close;
+    @TableField("`LowPrice`")
     private BigDecimal low;
+    @TableField("`TotalHand`")
     private BigDecimal volumn;
+    @TableField("`ChangePrice`")
     private BigDecimal priceChange;
+    @TableField("`ChangeRatio`")
     private BigDecimal priceRatio;
-    private BigDecimal ma5;
-    private BigDecimal ma10;
-    private BigDecimal ma20;
-    private BigDecimal vma5;
-    private BigDecimal vma10;
-    private BigDecimal vma20;
+    @TableField("`HandRate`")
     private BigDecimal turnover;
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime insertTime;
 }

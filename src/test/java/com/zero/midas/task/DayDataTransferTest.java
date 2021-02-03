@@ -1,8 +1,8 @@
 package com.zero.midas.task;
 
-import com.zero.midas.model.entity.DailyDO;
+import com.zero.midas.model.entity.Daily1DO;
 import com.zero.midas.model.entity.StockDO;
-import com.zero.midas.repository.DailyRepository;
+import com.zero.midas.repository.Daily1Repository;
 import com.zero.midas.repository.StockDayDataRepository;
 import com.zero.midas.repository.StockRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,15 +35,15 @@ public class DayDataTransferTest {
     private StockDayDataRepository stockDayDataRepository;
 
     @Autowired
-    private DailyRepository dailyRepository;
+    private Daily1Repository daily1Repository;
 
     @Test
     public void daily() {
         Set<String> codes = stockRepository.list().stream().map(StockDO::getCode).collect(Collectors.toSet());
         int index = 0;
         for (String code : codes) {
-            List<DailyDO> dailyDOS = stockDayDataRepository.listByCode(code).stream().map(day -> {
-                DailyDO dailyDO = new DailyDO();
+            List<Daily1DO> dailyDOS = stockDayDataRepository.listByCode(code).stream().map(day -> {
+                Daily1DO dailyDO = new Daily1DO();
                 dailyDO.setCode(day.getCode());
                 dailyDO.setDate(LocalDate.parse(day.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 dailyDO.setOpen(day.getOpen());
@@ -56,7 +56,7 @@ public class DayDataTransferTest {
                 dailyDO.setPriceRatio(day.getPriceRatio());
                 return dailyDO;
             }).collect(Collectors.toList());
-            dailyRepository.saveBatch(dailyDOS);
+            daily1Repository.saveBatch(dailyDOS);
             System.out.println(code + " -> " + (++index) + "/" + codes.size());
         }
     }

@@ -4,15 +4,15 @@ spring:
       primary: master #设置默认的数据源或者数据源组,默认值即为master，如果读者只是单数据源只需要注释掉slave相关配置即可，这里为了方便演示master与slave保持相同
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/midas?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+          url: jdbc:mysql://192.168.0.203:3306/midas?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
           username: root
-          password: root
+          password: 123456
           driverClassName:  com.mysql.cj.jdbc.Driver
-        slave:
-          url: jdbc:sqlite:D:\IdeaProjects\midas\stock_day.db
-          username:
-          password:
-          driverClassName:  org.sqlite.JDBC
+#        slave:
+#          url: jdbc:sqlite:D:\IdeaProjects\midas\stock_day.db
+#          username:
+#          password:
+#          driverClassName:  org.sqlite.JDBC
     hikari:
     # 最小空闲连接数量
       minimum-idle: 5

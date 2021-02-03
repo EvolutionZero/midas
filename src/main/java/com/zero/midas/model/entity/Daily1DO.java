@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("t_daily")
-public class DailyDO {
+@TableName("t_daily1")
+public class Daily1DO {
 
     @TableField("`code`")
     private String code;
